@@ -15,7 +15,7 @@ const ToDoItem = ({ item, onPress }) => {
 };
 
 ToDoItem.propTypes = {
-  item: PropTypes.arrayOf().isRequired,
+  item: PropTypes.shape().isRequired,
   onPress: PropTypes.func.isRequired,
 };
 

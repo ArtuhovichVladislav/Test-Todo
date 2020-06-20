@@ -7,7 +7,7 @@ import ToDoItem from './components/ToDoItem';
 import { selectToDoItemsList } from '../../selectors';
 import { removeItem } from '../../actions';
 
-const ToDoList = ({ todoItems }) => {
+const ToDoList = ({ todoItems, remove }) => {
   return (
     <FlatList
       data={todoItems}
@@ -15,7 +15,7 @@ const ToDoList = ({ todoItems }) => {
         <ToDoItem
           key={item.id}
           item={item}
-          onPress={() => removeItem(item.id)}
+          onPress={() => remove(item.id)}
         />
       )}
       keyExtractor={(item) => item.id}
@@ -24,11 +24,12 @@ const ToDoList = ({ todoItems }) => {
 };
 
 ToDoList.propTypes = {
-  todoItems: PropTypes.arrayOf().isRequired,
+  todoItems: PropTypes.arrayOf(PropTypes.shape()).isRequired,
+  remove: PropTypes.func.isRequired,
 };
 
 const mapDispatchToProps = (dispatch) => ({
-  removeItem: (itemId) => dispatch(removeItem(itemId)),
+  remove: (itemId) => dispatch(removeItem(itemId)),
 });
 
 const mapStateToProps = createStructuredSelector({
