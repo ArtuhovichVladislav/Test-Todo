@@ -1,36 +1,68 @@
 import * as React from 'react';
-import { Platform, StyleSheet, Text, View } from 'react-native';
+import { createStore, applyMiddleware } from 'redux';
+import { Provider } from 'react-redux';
+import thunk from 'redux-thunk';
+import { StyleSheet, Text, View } from 'react-native';
+import reducers from './src/reducers';
+import ToDoList from './src/screens/ToDoList';
+import AddButton from './src/screens/ToDoList/components/AddButton';
 
-const instructions = Platform.select({
-  ios: `Press Cmd+R to reload,\nCmd+D or shake for dev menu`,
-  android: `Double tap R on your keyboard to reload,\nShake or press menu button for dev menu`,
-});
-
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text style={styles.welcome}>Welcome to React Native!</Text>
-      <Text style={styles.instructions}>To get started, edit App.js</Text>
-      <Text style={styles.instructions}>{instructions}</Text>
-    </View>
-  );
-}
+const store = createStore(reducers, applyMiddleware(thunk));
 
 const styles = StyleSheet.create({
+  appContainer: {
+    flex: 1,
+    backgroundColor: 'white',
+  },
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
+    paddingHorizontal: 15,
   },
   welcome: {
-    fontSize: 20,
+    fontSize: 32,
     textAlign: 'center',
     margin: 10,
+    color: 'black',
   },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
+  border: {
+    borderWidth: 1,
+    borderColor: '#eee',
+    width: '100%',
+    elevation: 2,
+    alignSelf: 'flex-end',
+    alignItems: 'center',
+    height: 50,
+  },
+  buttonWrapper: {
+    marginTop: -25,
   },
 });
+
+const App = () => {
+  return (
+    <View style={styles.appContainer}>
+      <View style={styles.container}>
+        <Text style={styles.welcome}>React Native</Text>
+        <ToDoList />
+      </View>
+      <View style={styles.border}>
+        {/* <View /> */}
+        <View style={styles.buttonWrapper}>
+          <AddButton
+            onPress={() => {
+              console.log('onPress');
+            }}
+          />
+        </View>
+      </View>
+    </View>
+  );
+};
+
+const MyApp = () => (
+  <Provider store={store}>
+    <App />
+  </Provider>
+);
+
+export default MyApp;
