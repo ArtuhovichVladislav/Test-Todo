@@ -12,14 +12,6 @@ export const initialState = {
       title: 'Second item',
       id: uuidv4(),
     },
-    {
-      title: 'Third item',
-      id: uuidv4(),
-    },
-    {
-      title: 'Fourth item',
-      id: uuidv4(),
-    },
   ],
 };
 

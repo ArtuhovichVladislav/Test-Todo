@@ -16,6 +16,7 @@ const AddModal = ({ isVisible, onClose, onAdd }) => {
   const onAddItem = (todoItem) => {
     onAdd(todoItem);
     setItemText('');
+    setItemImage(null);
     onClose();
   };
   const item = {

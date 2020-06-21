@@ -3,43 +3,16 @@ import PropTypes from 'prop-types';
 import { createStore, applyMiddleware } from 'redux';
 import { Provider, connect } from 'react-redux';
 import thunk from 'redux-thunk';
-import { StyleSheet, Text, View } from 'react-native';
+import { Text, View, AppState } from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
 import reducers from './src/reducers';
 import ToDoList from './src/screens/ToDoList';
 import AddButton from './src/screens/ToDoList/components/AddButton';
 import AddModal from './src/screens/ToDoList/components/AddModal';
 import { addItem } from './src/actions';
+import styles from './styles';
 
 const store = createStore(reducers, applyMiddleware(thunk));
-
-const styles = StyleSheet.create({
-  appContainer: {
-    flex: 1,
-    backgroundColor: 'white',
-  },
-  container: {
-    flex: 1,
-    paddingHorizontal: 15,
-  },
-  welcome: {
-    fontSize: 32,
-    textAlign: 'center',
-    margin: 10,
-    color: 'black',
-  },
-  border: {
-    borderWidth: 1,
-    borderColor: '#eee',
-    width: '100%',
-    elevation: 2,
-    alignSelf: 'flex-end',
-    alignItems: 'center',
-    height: 50,
-  },
-  buttonWrapper: {
-    marginTop: -25,
-  },
-});
 
 const RootComponent = ({ addToDo }) => {
   const [isVisible, setIsVisible] = useState(false);
@@ -77,8 +50,67 @@ const mapDispatchToProps = (dispatch) => ({
 
 const ConnectedApp = connect(null, mapDispatchToProps)(RootComponent);
 
-export default () => (
-  <Provider store={store}>
-    <ConnectedApp />
-  </Provider>
-);
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      isStoreLoading: false,
+      reduxStore: store,
+    };
+  }
+
+  componentDidMount() {
+    const self = this;
+    AppState.addEventListener(
+      'change',
+      this.handleAppStateChange.bind(this),
+    );
+
+    AsyncStorage.getItem('completeStore')
+      .then((value) => {
+        if (value && value.length) {
+          const initialStore = JSON.parse(value);
+          self.setState({
+            reduxStore: createStore(
+              reducers,
+              initialStore,
+              applyMiddleware(thunk),
+            ),
+          });
+        } else {
+          self.setState({ reduxStore: store });
+        }
+        self.setState({ isStoreLoading: false });
+      })
+      .catch(() => {
+        self.setState({ reduxStore: store });
+        self.setState({ isStoreLoading: false });
+      });
+  }
+
+  componentWillUnmount() {
+    AppState.removeEventListener(
+      'change',
+      this.handleAppStateChange.bind(this),
+    );
+  }
+
+  handleAppStateChange() {
+    const { reduxStore } = this.state;
+    const storingValue = JSON.stringify(reduxStore.getState());
+    AsyncStorage.setItem('completeStore', storingValue);
+  }
+
+  render() {
+    const { isStoreLoading, reduxStore } = this.state;
+    if (isStoreLoading) {
+      return <Text>Loading Store ...</Text>;
+    }
+    return (
+      <Provider store={reduxStore}>
+        <ConnectedApp />
+      </Provider>
+    );
+  }
+}
+export default App;

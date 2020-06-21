@@ -12,11 +12,12 @@ export default StyleSheet.create({
     justifyContent: 'space-between',
   },
   itemText: {
+    width: '80%',
     fontSize: 16,
     color: 'black',
   },
   itemImage: {
-    width: '100%',
+    width: '20%',
     height: 30,
     resizeMode: 'contain',
   },
