@@ -8,9 +8,11 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import styles from './styles';
+import ImageSelect from '../ImageSelect';
 
 const AddModal = ({ isVisible, onClose, onAdd }) => {
   const [itemText, setItemText] = useState('');
+  const [itemImage, setItemImage] = useState(null);
   const onAddItem = (todoItem) => {
     onAdd(todoItem);
     setItemText('');
@@ -18,7 +20,10 @@ const AddModal = ({ isVisible, onClose, onAdd }) => {
   };
   const item = {
     title: itemText,
+    image: itemImage,
   };
+
+  const isDisabled = itemText.length < 1;
 
   return (
     <View>
@@ -29,13 +34,23 @@ const AddModal = ({ isVisible, onClose, onAdd }) => {
             placeholder="Item text"
             value={itemText}
             onChangeText={(text) => setItemText(text)}
+            maxLength={255}
+          />
+          <ImageSelect
+            image={itemImage}
+            setImage={(image) => setItemImage(image)}
           />
           <View style={styles.buttons}>
             <TouchableOpacity onPress={onClose}>
               <Text>Cancel</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => onAddItem(item)}>
-              <Text>Add item</Text>
+            <TouchableOpacity
+              onPress={() => onAddItem(item)}
+              disabled={isDisabled}
+            >
+              <Text style={isDisabled ? {} : styles.addText}>
+                Add item
+              </Text>
             </TouchableOpacity>
           </View>
         </View>

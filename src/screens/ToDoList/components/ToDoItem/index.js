@@ -8,7 +8,10 @@ const ToDoItem = ({ item, onPress }) => {
     <TouchableOpacity onPress={onPress} style={styles.item}>
       <Text style={styles.itemText}>{item.title}</Text>
       {item.image ? (
-        <Image style={styles.itemImage} source={item.image} />
+        <Image
+          style={styles.itemImage}
+          source={{ uri: item.image }}
+        />
       ) : null}
     </TouchableOpacity>
   );

@@ -7,13 +7,17 @@ export default StyleSheet.create({
     borderBottomColor: '#eee',
     paddingVertical: 15,
     paddingHorizontal: 15,
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   itemText: {
     fontSize: 16,
     color: 'black',
   },
   itemImage: {
-    width: 30,
+    width: '100%',
     height: 30,
+    resizeMode: 'contain',
   },
 });

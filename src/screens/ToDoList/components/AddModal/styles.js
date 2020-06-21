@@ -11,8 +11,11 @@ export default StyleSheet.create({
     borderBottomColor: '#eee',
   },
   buttons: {
-    marginTop: 20,
+    marginTop: 15,
     flexDirection: 'row',
     justifyContent: 'space-between',
+  },
+  addText: {
+    color: '#035aa6',
   },
 });
